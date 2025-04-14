@@ -19,7 +19,11 @@ python3 -m venv env		        # Creates environment
 .\env\Scripts\activate	        # Runs environment
 ```
 
-2. Install migrations
+2. Install dependecies
+
+```pip install -r requirements.txt``` (generated with pip freeze)
+
+3. Install migrations
 ```
 python manage.py makemigrations
 python manage.py migrate
@@ -27,12 +31,12 @@ python manage.py migrate
 
 Or just (on Windows machines) run .\migrate.ps1
 
-3. Create admin user
+4. Create admin user
 ```
 python manage.py createsuperuser
 ```
 
-4. Run server
+5. Run server
 ```
 python manage.py runserver
 ```
