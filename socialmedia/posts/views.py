@@ -9,9 +9,16 @@ from .serializers import PostSerializer
 
 # Create your views here.
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def view_post(request, id=None):
     if request.method == 'GET':
         posts = Post.objects.all()                                  # Get all posts
         serializer = PostSerializer(posts, many=True)               # Use serializer
         return Response(serializer.data, status=status.HTTP_200_OK) # Reponse
+    
+    elif request.method == 'POST':
+        serializer = PostSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -49,3 +49,18 @@ INSTALLED_APPS = [
 
 Now I am able to get posts with Postman:
 ![Postman](screenshots/2_postman_get_posts.png)
+
+### Implementing POST request
+
+I added this to views:
+```python
+elif request.method == 'POST':
+    serializer = PostSerializer(data=request.data, context={'request': request})
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+```
+
+And tried this in Postman:
+![Postman POST request](screenshots/3_post_request.png)
