@@ -21,8 +21,8 @@ python3 -m venv env		        # Creates environment
 
 2. Install migrations
 ```
-python manage.py migrate
 python manage.py makemigrations
+python manage.py migrate
 ```
 
 Or just (on Windows machines) run .\migrate.ps1
@@ -37,10 +37,6 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-## Documentation of setupping django server
+# Documentation of work
 
-```
-pip install django                      # Installed Django server
-django-admin startproject socialmedia   # Started "socialmedia" named project
-python manage.py startapp social        # Started "social" named app under project
-```
+[See here](documentation.md)
