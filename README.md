@@ -6,9 +6,15 @@ Practice work for Web server programming
 
 ## Techniques
 
+### Frontend
+
+- React / Next.js
+
+### Bakcned
+
 - Angular
 - Django
-- Python
++ Django REST Framework
 
 ## Setup
 
