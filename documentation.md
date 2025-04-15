@@ -198,6 +198,12 @@ I also tested refresh token:
 {"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ0NzI1NzU4LCJpYXQiOjE3NDQ3MjUzMTMsImp0aSI6Ijc4MmExZTAzNmE0MzQxNmM4Mjk3YTFiMmE3ZDE0ZmQ4IiwidXNlcl9pZCI6M30.vj3qp_0zdo7ZOszrDgKcREquYIiygYUo1PX7tQNwqhs"}
 ```
 
+Now I tested to get posts with token. It works:
+
+![Posts with token](screenshots/12_get_posts_with_token.png)
+
+
+
 
 
 
