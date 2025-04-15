@@ -96,3 +96,25 @@ Then I just put this users to INSTALLED_APPS
 
 Then I ran migrations and tada, they're in Django Admin:
 ![Users](screenshots/4_users.png)
+
+But I don't want to create profiles manually, I want them work automatically. So, there is a solution called Signals.
+
+### Implementing signals to users
+
+1. I created a file [signals.py](socialmedia/users/signals.py) under users directory. 
+2. I added signals to [apps.py](socialmedia/users/apps.py)
+
+It's simple as that:
+```python
+def ready(self):
+    import users.signals  # Load signals.py
+```
+
+Then test run: I created a user called "uusi":
+
+![It just works](screenshots/5_automatic_user_profile_creation.png)
+
+Looks like it works.
+
+The next step will be user registration using API.
+
