@@ -64,3 +64,35 @@ elif request.method == 'POST':
 
 And tried this in Postman:
 ![Postman POST request](screenshots/3_post_request.png)
+
+### Implementing Users
+
+I stopped the server and wrote command: ```python manage.py startapp users```. Now I have users-app.
+
+I created Profile model:
+
+```python
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    friends = models.ManyToManyField(User, blank=True, related_name="friend_profiles")
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.user.username
+```
+
+The fields:
+| Name       | Description                     |
+| ---------- | ------------------------------- |
+| user       | Relation to User class          |
+| friends    | Related to many User classes    |
+| first_name | User's first name               |
+| last_name  | User's last name                |
+
+I also created [serializers](socialmedia/users/serializers.py) for users. I put the model to users' admin.py with ```admin.site.register(Profile)```
+
+Then I just put this users to INSTALLED_APPS
+
+Then I ran migrations and tada, they're in Django Admin:
+![Users](screenshots/4_users.png)
