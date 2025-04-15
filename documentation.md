@@ -154,3 +154,35 @@ Also tested with email exists:
 
 ![Email exists](screenshots/8_email_exists.png)
 
+### Implementing login
+
+First, I installed ```pip install djangorestframework-simplejwt```
+
+Then I added code below to [settings.py](socialmedia/socialmedia/settings.py):
+
+```python
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+```
+
+Then I added URL routes to [urls.py](socialmedia/socialmedia/urls.py) for getting and refreshing tokens:
+
+```python
+urlpatterns = [
+    ...,
+    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+]
+```
+
+I also protected [Post views](socialmedia/posts/views.py) with ```@permission_classes``` so now user must be logged in before fetching posts:
+
+![Authentication credentials missing](screenshots/9_authentication_failed.png)
+
+
+
+
+
