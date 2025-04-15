@@ -154,3 +154,59 @@ Also tested with email exists:
 
 ![Email exists](screenshots/8_email_exists.png)
 
+### Implementing login
+
+First, I installed ```pip install djangorestframework-simplejwt```
+
+Then I added code below to [settings.py](socialmedia/socialmedia/settings.py):
+
+```python
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+```
+
+Then I added URL routes to [urls.py](socialmedia/socialmedia/urls.py) for getting and refreshing tokens:
+
+```python
+urlpatterns = [
+    ...,
+    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+]
+```
+
+I also protected [Post views](socialmedia/posts/views.py) with ```@permission_classes``` so now user must be logged in before fetching posts:
+
+![Authentication credentials missing](screenshots/9_authentication_failed.png)
+
+So, now I made a request with Postman and got access and refresh tokens:
+
+![Tokens got](screenshots/10_got_tokens.png)
+
+```json
+{"refresh":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0NDgxMTcxMywiaWF0IjoxNzQ0NzI1MzEzLCJqdGkiOiJiOGJlNDg4NzY2N2Q0MjA4YjU2ZDMwOWVlODdiYTdkYiIsInVzZXJfaWQiOjN9.hSL16Hc-oyUvHiblP4XhtzwgPlG63oDZLb9u-SxgfUI","access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ0NzI1NjEzLCJpYXQiOjE3NDQ3MjUzMTMsImp0aSI6IjI5M2U4M2JjOGM2NDQzMzk4NzFmNjg4NzBkMzEzZjlhIiwidXNlcl9pZCI6M30.DabXO6PFBMBQOopIORJctiWIw_dgTc0adaGNchfwZcY"}
+```
+
+I also tested refresh token:
+
+![New access token](screenshots/11_got_new_access_token.png)
+
+```json
+{"access":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ0NzI1NzU4LCJpYXQiOjE3NDQ3MjUzMTMsImp0aSI6Ijc4MmExZTAzNmE0MzQxNmM4Mjk3YTFiMmE3ZDE0ZmQ4IiwidXNlcl9pZCI6M30.vj3qp_0zdo7ZOszrDgKcREquYIiygYUo1PX7tQNwqhs"}
+```
+
+Now I tested to get posts with token. It works:
+
+![Posts with token](screenshots/12_get_posts_with_token.png)
+
+
+
+
+
+
+
+
+
