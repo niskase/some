@@ -43,4 +43,5 @@ python manage.py runserver
 
 # Documentation of work
 
-[See here](documentation.md)
+[How it's made](documentation.md)  
+[API routes](apis.md)
