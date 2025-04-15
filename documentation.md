@@ -118,3 +118,39 @@ Looks like it works.
 
 The next step will be user registration using API.
 
+### Implementing registration
+
+I created a [RegisterView](socialmedia/users/views.py):
+
+```python
+User = get_user_model()
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = RegisterSerializer
+    permission_classes = [AllowAny]
+```
+
+Then url to [urls](socialmedia/users/urls.py):
+
+```python
+urlpatterns = [
+    path('register/', views.RegisterView.as_view(), name='register'),
+]
+```
+
+- Also created [RegisterSerializer](socialmedia/users/serializers.py)
+
+Also imported users's urls.py to main urls.py.
+
+It might be simple as that. Let's test it:
+
+![API urls](screenshots/6_latest_api_urls.png)
+
+Django shows the ```api/register``` path so it might work. Let's test it in Postman:
+
+![Registration OK](screenshots/7_registering_works.png)
+
+Also tested with email exists:
+
+![Email exists](screenshots/8_email_exists.png)
+
