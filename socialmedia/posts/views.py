@@ -12,9 +12,14 @@ from .serializers import PostSerializer
 @api_view(['GET', 'POST'])
 def view_post(request, id=None):
     if request.method == 'GET':
-        posts = Post.objects.all()                                  # Get all posts
-        serializer = PostSerializer(posts, many=True)               # Use serializer
-        return Response(serializer.data, status=status.HTTP_200_OK) # Reponse
+        if id:
+            post = Post.objects.get(pk=id)                              # Get single post by ID
+            serializer = PostSerializer(post, many=False)               # Use serializer
+            return Response(serializer.data, status=status.HTTP_200_OK) # Reponse
+        else:
+            posts = Post.objects.all()                                  # Get all posts
+            serializer = PostSerializer(posts, many=True)               # Use serializer
+            return Response(serializer.data, status=status.HTTP_200_OK) # Reponse
     
     elif request.method == 'POST':
         serializer = PostSerializer(data=request.data, context={'request': request})
