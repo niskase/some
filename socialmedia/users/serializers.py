@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
 # Friend serializer
-class FriendSerializer(serializers.ModelSerializer):
+class FriendRequestSerializer(serializers.ModelSerializer):
     first_name = serializers.StringRelatedField(source='profile.first_name')
     last_name = serializers.StringRelatedField(source='profile.last_name')
     username = serializers.StringRelatedField(source='profile.user.username', read_only=True) 
@@ -18,7 +18,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(source='get_full_name', read_only=True)
     username = serializers.CharField(source='user.username', read_only=True) 
 
-    friends = FriendSerializer(many=True)
+    friends = FriendRequestSerializer(many=True)
 
     class Meta:
         model = Profile
