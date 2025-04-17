@@ -202,10 +202,35 @@ Now I tested to get posts with token. It works:
 
 ![Posts with token](screenshots/12_get_posts_with_token.png)
 
+### Issue: SOME-03 User ID to post
 
+Added created_by to Post model which relates to User class
 
+```python
+class Post(models.Model):
+    ...
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+```
 
+Also made some modifications to serializer, adding two read-only fields:
 
+```python
+username = serializers.StringRelatedField(source='owner.profile.user.username', read_only=True) # That gets user's username
+
+class Meta:
+    ...
+    read_only_fields = ['created_by', 'username'] # Set read-only fields
+
+    # When creating a post, get current (logged) user ID and set it to created_by parameter which is a dictionary
+    def create(self, validated_data):
+        validated_data['created_by'] = self.context['request'].user
+        return super().create(validated_data)
+
+```
+
+Then I run migrations and now I have ```Created by``` field:
+
+![Created By Field](screenshots/13_created_by_field_added.png)
 
 
 
