@@ -232,6 +232,46 @@ Then I run migrations and now I have ```Created by``` field:
 
 ![Created By Field](screenshots/13_created_by_field_added.png)
 
+### Issue: SOME-04 Get only posts made by friends
+
+Changed views.py a bit, now it takes only posts made with own or friend's ID:
+
+```python
+user = request.user
+profile = get_object_or_404(Profile, user=user)
+friend_ids = profile.friends.values_list('id', flat=True)
+if id:
+    ...
+else:
+    ...
+        posts = Post.objects.filter(created_by__id__in=[user.id, *friend_ids]).order_by('-created_at')
+        ...
+```
+
+I also put single post to own function and it also checks if the user or friend has made the post.
+```python
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def view_single_post(request, id):
+            
+    # Get current user ID
+    user = request.user
+
+    # Get profile of current user
+    profile = get_object_or_404(Profile, user=user)     
+
+    # Get friend IDs
+    friend_ids = profile.friends.values_list('id', flat=True)
+
+    # Filter for created_by
+    post = Post.objects.filter(pk=id, created_by__id__in=[user.id, *friend_ids]).first()
+
+    # Use serializer
+    serializer = PostSerializer(post, many=False)
+
+    # Response
+    return Response(serializer.data, status=status.HTTP_200_OK) 
+```
 
 
 
