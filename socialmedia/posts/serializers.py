@@ -4,6 +4,7 @@ from .models import Post
 class PostSerializer(serializers.ModelSerializer):
 
     username = serializers.StringRelatedField(source='owner.profile.user.username', read_only=True)
+    likes = serializers.SerializerMethodField()
 
     class Meta:
         model = Post

@@ -63,3 +63,18 @@ def view_single_post(request, id):
 
         # Response
         return Response(serializer.data, status=status.HTTP_200_OK) 
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def post_like(request, post_id):
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        return Response({'msg': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Lisää käyttäjä likes-kenttään, jos sitä ei ole vielä
+    if request.user not in post.likes.all():
+        post.likes.add(request.user)
+        return Response({'msg': 'Post liked successfully'}, status=status.HTTP_200_OK)
+    else:
+        return Response({'msg': 'You have already liked this post'}, status=status.HTTP_400_BAD_REQUEST)

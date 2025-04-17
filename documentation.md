@@ -329,3 +329,10 @@ Looks like it works:
 ![Accepted](screenshots/20_accepted.png)
 ![Django admin view](screenshots/21_django.png)
 
+### Post likes
+
+1. Added also likes to models
+2. Added it to serializers
+3. Added post_like function to [views](socialmedia/posts/views.py)
+4. Added it to urls
+
