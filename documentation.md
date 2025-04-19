@@ -431,22 +431,32 @@ I used following setup:
 
 - I also created posts/page.tsx for posts and login + register components.
 
-I put a config in next.config.ts:
+#### CORS policy fix
 
-```typescript
-/* Use Django via frontend */ 
-const nextConfig: NextConfig = {
-  reactStrictMode: true,
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://localhost:8000/api/:path*',
-      },
-    ];
-  },
-}
+Ran command: ```pip install django-cors-headers```
+
+Then modified settings.py:
+
+```python
+
+ALLOWED_HOSTS = [
+    '*'
+]
+
+INSTALLED_APPS = [
+    ...
+    'corsheaders'
+]
+
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    ...
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
 ```
-
-Now I can access django API directly using ```http://localhost:3000/api```
-
