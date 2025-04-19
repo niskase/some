@@ -45,3 +45,30 @@ Example POST request to ```/api/token/refresh/```
 ```
 
 In friend requests, use ```:id``` to accept/decline/cancel requests
+
+Example reponse of ```/api/posts/:id/like/```:
+
+```json
+[
+    {
+        "id": 2,
+        "created_by": {
+            "first_name": "Uusi",
+            "last_name": "Tyyppi",
+            "user_id": 2,
+            "username": "uusi"
+        },
+        "likes": [
+            {
+                "first_name": "Petri",
+                "last_name": "Niskanen",
+                "user_id": 1,
+                "username": "petri"
+            },
+        ],
+        "content": "Moi",
+        "created_at": "2025-04-17T16:08:08.859342Z"
+    },
+    ...
+]
+```
