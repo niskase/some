@@ -329,3 +329,79 @@ Looks like it works:
 ![Accepted](screenshots/20_accepted.png)
 ![Django admin view](screenshots/21_django.png)
 
+### Post likes
+
+1. Added also likes to [models](socialmedia/posts/models.py)
+2. Added it to [serializers](socialmedia/posts/serializers.py)
+3. Added post_like function to [views](socialmedia/posts/views.py)
+4. Added it to [urls](socialmedia/posts/urls.py)
+
+Then ran migrations.
+
+### Post likes in Django Admin
+
+Now I have this field here:
+
+![Likes on post](screenshots/22_likes.png)
+
+Now I sent a like in Postman:
+
+![Liked](screenshots/23_liked.png)
+
+![Users likes](screenshots/24_likes_showing.png)
+
+Also modified code that likes has more information about user:
+
+```python
+ def get_likes(self, obj):
+    users = []
+    for user in obj.likes.all():
+        newuser = {}
+        newuser["first_name"] = user.profile.first_name
+        newuser["last_name"] = user.profile.last_name
+        newuser["user_id"] = user.id
+        newuser["username"]= user.username
+        users.append(newuser)
+    return users
+```
+
+Also removed username from PostSerializer and added ```created_by = serializers.SerializerMethodField()```
+
+Then added this function:
+```python
+def get_created_by(self, obj):
+    profile = getattr(obj.created_by, 'profile', None)
+    return {
+        "first_name": profile.first_name if profile else '',
+        "last_name": profile.last_name if profile else '',
+        "user_id": obj.created_by.id,
+        "username": obj.created_by.username,
+    }
+```
+
+Now the response is more clear:
+
+```json
+[
+    {
+        "id": 2,
+        "created_by": {
+            "first_name": "Uusi",
+            "last_name": "Tyyppi",
+            "user_id": 2,
+            "username": "uusi"
+        },
+        "likes": [
+            {
+                "first_name": "Petri",
+                "last_name": "Niskanen",
+                "user_id": 1,
+                "username": "petri"
+            },
+        ],
+        "content": "Moi",
+        "created_at": "2025-04-17T16:08:08.859342Z"
+    },
+    ...
+]
+```

@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Profile
+from .models import Profile, FriendRequest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
 # Friend serializer
-class FriendRequestSerializer(serializers.ModelSerializer):
+class FriendSerializer(serializers.ModelSerializer):
     first_name = serializers.StringRelatedField(source='profile.first_name')
     last_name = serializers.StringRelatedField(source='profile.last_name')
     username = serializers.StringRelatedField(source='profile.user.username', read_only=True) 
@@ -13,12 +13,20 @@ class FriendRequestSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ['id', 'first_name', 'last_name', 'username']
 
+# Friend request serializer
+class FriendRequestSerializer(serializers.ModelSerializer):
+    sender = serializers.StringRelatedField()
+    receiver = serializers.StringRelatedField()
+
+    class Meta:
+        model = FriendRequest
+        fields = ['id', 'sender', 'receiver', 'status', 'created_at']
+
 # Profile serializer
 class ProfileSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(source='get_full_name', read_only=True)
     username = serializers.CharField(source='user.username', read_only=True) 
-
-    friends = FriendRequestSerializer(many=True)
+    friends = FriendSerializer(many=True)
 
     class Meta:
         model = Profile
