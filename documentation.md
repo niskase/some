@@ -331,8 +331,21 @@ Looks like it works:
 
 ### Post likes
 
-1. Added also likes to models
-2. Added it to serializers
+1. Added also likes to [models](socialmedia/posts/models.py)
+2. Added it to [serializers](socialmedia/posts/serializers.py)
 3. Added post_like function to [views](socialmedia/posts/views.py)
-4. Added it to urls
+4. Added it to [urls](socialmedia/posts/urls.py)
 
+Then ran migrations.
+
+### Post likes in Django Admin
+
+Now I have this field here:
+
+![Likes on post](screenshots/22_likes.png)
+
+Now I sent a like in Postman:
+
+![Liked](screenshots/23_liked.png)
+
+![Users likes](screenshots/24_likes_showing.png)

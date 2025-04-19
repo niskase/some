@@ -14,3 +14,6 @@ class PostSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
+    
+    def get_likes(self, obj):
+        return [like.username for like in obj.likes.all()]
