@@ -19,8 +19,6 @@ export default function LoginPage() {
 
     try {
 
-      console.log("Try");
-
       const response = await api.post('http://localhost:8000/api/token/', {
         username,
         password,

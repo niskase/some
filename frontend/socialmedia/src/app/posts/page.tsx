@@ -48,15 +48,6 @@ export default function PostsPage() {
 
         setPosts(response.data)
 
-        console.log("Reponse", response)
-
-        /*const res = await fetch('/posts/', {
-          headers: {
-            Authorization: token,
-          },
-        });
-        console.log("res", res);*/
-        //setPosts(response.data.data); 
       } catch (error) {
         console.error('Virhe haettaessa postauksia:', error.response.data);
       } finally {
@@ -68,6 +59,28 @@ export default function PostsPage() {
   }, []);
 
   if (loading) return <p>Loading updates...</p>;
+
+  async function likePost(post: Post) {
+    console.log(post.id);
+    try {
+      const response = await fetch(`http://localhost:8000/api/posts/${post.id}/like/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`,
+        },
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Failed to like post', errorData);
+      } else {
+        console.log('Post liked successfully');
+      }
+    } catch (error) {
+      console.error('Error while liking post', error);
+    }
+  }
 
   return (
     <div className="p-6">
@@ -81,6 +94,9 @@ export default function PostsPage() {
             <p>Created: {post.created_at}</p>
             <p>{post.content}</p>
             <hr />
+            <button onClick={()=>likePost(post)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+              Like
+            </button>
             {post.likes.length === 0 ? (
               <p>No likes yet</p>
             ) : (
