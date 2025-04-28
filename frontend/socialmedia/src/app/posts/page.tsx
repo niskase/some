@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import RefreshToken from '../services/auth';
+import NewPost, { PostLike } from '../services/post';
+import { useRouter } from 'next/navigation';
 
 class Post {
   id!: number;
@@ -23,37 +25,52 @@ class User {
 export default function PostsPage() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [newPost, setNewPost] = useState("");
 
   const token = localStorage.getItem('access');
+
+  const router = useRouter();
+
+  
+
+  const fetchPosts = async () => {
+    try {
+      const response = await api.get('http://localhost:8000/api/posts/', {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      setPosts(response.data)
+
+    } catch (error) {
+      console.error('Virhe haettaessa postauksia:', error.response.data);
+      if (error.response.data.code == "token_not_valid") {
+        localStorage.removeItem('access');
+        localStorage.removeItem('refresh');
+        router.push('/');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await api.get('http://localhost:8000/api/posts/', {
-          headers: {
-            Authorization: token,
-          },
-        });
-
-        setPosts(response.data)
-
-      } catch (error) {
-        console.error('Virhe haettaessa postauksia:', error.response.data);
-        if (error.response.data.code == "token_not_valid") {
-          // Renew token
-          RefreshToken();
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPosts();
   }, []);
 
+  const handleNewPost = async (newPost: string) => {
+    await NewPost(newPost, fetchPosts);
+    setNewPost('');
+  };
+
+  const handlePostLike = async (post: Post) => {
+    await PostLike(post.id, fetchPosts);
+  }
+
   if (loading) return <p>Loading updates...</p>;
 
-  async function likePost(post: Post) {
+  /*async function likePost(post: Post) {
     console.log(post.id);
     try {
       const response = await fetch(`http://localhost:8000/api/posts/${post.id}/like/`, {
@@ -73,35 +90,44 @@ export default function PostsPage() {
     } catch (error) {
       console.error('Error while liking post', error);
     }
-  }
+  }*/
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Updates</h1>
-      {posts.length === 0 ? (
-        <p>No posts</p>
-      ) : (
-        posts.map((post: Post) => (
-          <div key={post.id} className="border p-4 rounded mb-2">
-            <p><strong>{post.created_by.first_name} {post.created_by.last_name}</strong></p>
-            <p>Created: {post.created_at}</p>
-            <p>{post.content}</p>
-            <hr />
-            <button onClick={()=>likePost(post)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-              Like
-            </button>
-            {post.likes.length === 0 ? (
-              <p>No likes yet</p>
-            ) : (
-              <ul>
-                {post.likes.map((user: User, index: number) => (
-                  <li key={user.id}>👍 {user.first_name} {user.last_name}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))
-      )}
+    <div>
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-4">Updates</h1>
+        <div className="border p-4 rounded mb-2">
+          <p><strong>New update</strong></p>
+          <textarea onChange={(e) => setNewPost(e.target.value)}></textarea>
+          <button onClick={()=>handleNewPost(newPost)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+            Send
+          </button>
+        </div>
+        {posts.length === 0 ? (
+          <p>No posts</p>
+        ) : (
+          posts.map((post: Post) => (
+            <div key={post.id} className="border p-4 rounded mb-2">
+              <p><strong>{post.created_by.first_name} {post.created_by.last_name}</strong></p>
+              <p>Created: {post.created_at}</p>
+              <p>{post.content}</p>
+              <hr />
+              <button onClick={()=>handlePostLike(post)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                Like
+              </button>
+              {post.likes.length === 0 ? (
+                <p>No likes yet</p>
+              ) : (
+                <ul>
+                  {post.likes.map((user: User, index: number) => (
+                    <li key={user.id}>👍 {user.first_name} {user.last_name}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 

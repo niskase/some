@@ -1,10 +1,9 @@
 import api from '@/lib/api';
 
-export default async function RefreshToken() {
+export default async function RefreshToken(token, onSuccess: () => void) {
 
     try {
   
-      const refresh = localStorage.getItem('refresh');
       const response = await api.post('http://localhost:8000/api/token/refresh/', {
         'refresh': refresh?.split(" ")[1] // I was stupid and saved token with Bearer
       });
@@ -14,12 +13,14 @@ export default async function RefreshToken() {
   
       localStorage.setItem('access', `Bearer ${accessToken}`);
       localStorage.setItem('refresh', `Bearer ${refreshToken}`);
+
+      onSuccess();
   
     } catch (error) {
       if (error.code === "ERR_BAD_REQUEST") {
         alert(`Error ${error.status}`);
-        localStorage.deleteItem('access');
-        localStorage.deleteItem('refresh');
+        localStorage.removeItem('access');
+        localStorage.removeItem('refresh');
       }
     }
   };
