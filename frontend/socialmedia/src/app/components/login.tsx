@@ -9,13 +9,11 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const router = useRouter();
 
-  if (localStorage.getItem('authToken')) {
+  if (localStorage.getItem('access')) {
     router.push('/posts');
   }
 
   const handleLogin = async () => {
-
-    console.log("Handle login");
 
     try {
 
