@@ -1,7 +1,7 @@
 | URL                                 | Description                  | Available methods |
 | ----------------------------------- | ---------------------------- | ----------------- |
 | /api/posts/                         | Shows all posts              | GET, POST         |
-| /api/posts/:id/                     | Shows post by ID             | GET               |
+| /api/posts/:id/                     | Shows post by ID             | GET, DELETE       |
 | /api/posts/:id/like/                | Like someone's post          | POST              |
 | /api/register/                      | User registration            | POST              |
 | /api/token/                         | Get user token               | POST              |
