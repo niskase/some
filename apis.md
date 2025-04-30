@@ -44,6 +44,13 @@ Example POST request to ```/api/token/refresh/```
 }
 ```
 
+Example POST request to ```/api/friend-request/```
+```json
+{
+    "receiver_name": "friend_username"
+}
+```
+
 In friend requests, use ```:id``` to accept/decline/cancel requests
 
 Example reponse of ```/api/posts/:id/like/```:

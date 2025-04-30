@@ -6,6 +6,8 @@ import RefreshToken from '../services/auth';
 import NewPost, { PostDelete, PostLike } from '../services/post';
 import { useRouter } from 'next/navigation';
 import Logout from '../components/logout';
+import FriendsAndRequestList from '../services/friends';
+import NewFriend from '../services/friend';
 
 class Post {
   id!: number;
@@ -22,17 +24,24 @@ class User {
   username!: string;
 }
 
+class Friend {
+  id!: number;
+  receiver!: string;
+  sender!: string;
+  status!: string;
+}
+
 
 export default function PostsPage() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newPost, setNewPost] = useState("");
+  const [friends, setFriends] = useState([]);
+  const [newFriend, setNewFriend] = useState("");
 
   const token = localStorage.getItem('access');
 
   const router = useRouter();
-
-  
 
   const fetchPosts = async () => {
     try {
@@ -55,9 +64,33 @@ export default function PostsPage() {
       setLoading(false);
     }
   };
+
+  const fetchFriendsAndRequests = async () => {
+    try {
+      const response = await api.get('http://localhost:8000/api/friend-request/list', {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      setFriends(response.data.data)
+      console.log("response", friends)
+
+    } catch (error) {
+      console.error('Friends fetching error:', error.response.data);
+      if (error.response.data.code == "token_not_valid") {
+        localStorage.removeItem('access');
+        localStorage.removeItem('refresh');
+        router.push('/');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
   
   useEffect(() => {
     fetchPosts();
+    fetchFriendsAndRequests();
   }, []);
 
   const handleNewPost = async (newPost: string) => {
@@ -71,6 +104,10 @@ export default function PostsPage() {
 
   const handlePostDelete = async (post: Post) => {
     await PostDelete(post.id, fetchPosts);
+  }
+
+  const handleNewFriend = async (friend: string) => {
+    await NewFriend(friend, fetchFriendsAndRequests);
   }
 
   if (loading) return <p>Loading updates...</p>;
@@ -140,8 +177,19 @@ export default function PostsPage() {
         <h1 className="text-2xl font-bold mb-4">Personal</h1>
         <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
           <Logout></Logout>
-          <p className="mt-4 font-bold">Friends</p>
-          <p className="mt-4 font-bold">Requests</p>
+          <p className="mt-4 font-bold">Friends and requests</p>
+          <ul>
+            {friends.map((friend: Friend) => (
+              <li key={friend.id}>{friend.sender} ➡️ {friend.receiver} ({friend.status})</li>
+            ))}
+          </ul>
+          <p className="mt-4 font-bold">Send friend request</p>
+          <div>
+            <input type="text" id="first_name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username..." onChange={(e) => setNewFriend(e.target.value)} required />
+            <button onClick={()=>handleNewFriend(newFriend)} type="submit" className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>
