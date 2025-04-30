@@ -75,33 +75,10 @@ export default function PostsPage() {
 
   if (loading) return <p>Loading updates...</p>;
 
-  /*async function likePost(post: Post) {
-    console.log(post.id);
-    try {
-      const response = await fetch(`http://localhost:8000/api/posts/${post.id}/like/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `${token}`,
-        },
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Failed to like post', errorData);
-      } else {
-        console.log('Post liked successfully');
-      }
-    } catch (error) {
-      console.error('Error while liking post', error);
-    }
-  }*/
-
   return (
-    <div>
-      <Logout></Logout>
+    <div className="grid grid-cols-2">
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Updates</h1>
+        <h1 className="text-2xl font-bold mb-4">Community</h1>
         <div className="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
             <div className="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
                 <label for="comment" className="sr-only">Your comment</label>
@@ -158,6 +135,14 @@ export default function PostsPage() {
           </div>
           ))
         )}
+      </div>
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-4">Personal</h1>
+        <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+          <Logout></Logout>
+          <p className="mt-4 font-bold">Friends</p>
+          <p className="mt-4 font-bold">Requests</p>
+        </div>
       </div>
     </div>
   );
