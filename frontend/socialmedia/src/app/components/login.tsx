@@ -13,6 +13,12 @@ export default function LoginPage() {
     router.push('/posts');
   }
 
+  const goToRegister = async () => {
+
+    router.push('/register');
+
+  }
+
   const handleLogin = async () => {
 
     try {
@@ -38,7 +44,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="p-6 max-w-sm mx-auto">
+    <div className="pt-6 max-w-sm mx-auto">
       <h1 className="text-2xl font-bold mb-4">Login</h1>
       <input
         type="text"
