@@ -405,3 +405,58 @@ Now the response is more clear:
     ...
 ]
 ```
+
+## Frontend (Next.js)
+
+### Setupping the frontend environment
+
+First I ran ```npx create-next-app@latest socialmedia```
+
+I used following setup:
+
+```
+√ Would you like to use TypeScript? ... Yes
+√ Would you like to use ESLint? ... Yes
+√ Would you like to use Tailwind CSS? ... Yes
+√ Would you like your code inside a `src/` directory? ... Yes
+√ Would you like to use App Router? (recommended) ... Yes
+√ Would you like to use Turbopack for `next dev`? ... Yes
+√ Would you like to customize the import alias (`@/*` by default)? ... No 
+```
+
+- Then just run ```npm run dev```
+- And install ```npm install axios```
+
+- Then I created [lib/api.js](frontend/socialmedia/src/app/lib/api.js)
+
+- I also created posts/page.tsx for posts and login + register components.
+
+#### CORS policy fix
+
+Ran command: ```pip install django-cors-headers```
+
+Then modified settings.py:
+
+```python
+
+ALLOWED_HOSTS = [
+    '*'
+]
+
+INSTALLED_APPS = [
+    ...
+    'corsheaders'
+]
+
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    ...
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+```

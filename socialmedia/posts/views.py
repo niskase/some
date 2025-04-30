@@ -42,27 +42,43 @@ def view_post(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
+@api_view(['GET', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def view_single_post(request, id):
+        
+        if request.method == 'GET':
             
-        # Get current user ID
-        user = request.user
+            # Get current user ID
+            user = request.user
 
-        # Get profile of current user
-        profile = get_object_or_404(Profile, user=user)     
+            # Get profile of current user
+            profile = get_object_or_404(Profile, user=user)     
 
-        # Get friend IDs
-        friend_ids = profile.friends.values_list('id', flat=True)
+            # Get friend IDs
+            friend_ids = profile.friends.values_list('id', flat=True)
 
-        # Filter for created_by
-        post = Post.objects.filter(pk=id, created_by__id__in=[user.id, *friend_ids]).first()
+            # Filter for created_by
+            post = Post.objects.filter(pk=id, created_by__id__in=[user.id, *friend_ids]).first()
 
-        # Use serializer
-        serializer = PostSerializer(post, many=False)
+            # Use serializer
+            serializer = PostSerializer(post, many=False)
 
-        # Response
-        return Response(serializer.data, status=status.HTTP_200_OK) 
+            # Response
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        elif request.method == 'DELETE':
+            try:
+                post_obj = Post.objects.get(pk=id) # Delete post by id
+            except Post.DoesNotExist:
+                return Response({'msg': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
+            
+            if post_obj.created_by != request.user:
+                return Response({'msg': 'You do not have permission to delete this post'}, status=status.HTTP_403_FORBIDDEN)
+            
+            post_obj.delete()
+            return Response({'msg': 'Post deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+        return Response({'msg': 'Invalid request method'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

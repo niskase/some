@@ -1,7 +1,7 @@
 | URL                                 | Description                  | Available methods |
 | ----------------------------------- | ---------------------------- | ----------------- |
 | /api/posts/                         | Shows all posts              | GET, POST         |
-| /api/posts/:id/                     | Shows post by ID             | GET               |
+| /api/posts/:id/                     | Shows post by ID             | GET, DELETE       |
 | /api/posts/:id/like/                | Like someone's post          | POST              |
 | /api/register/                      | User registration            | POST              |
 | /api/token/                         | Get user token               | POST              |
@@ -41,6 +41,13 @@ Example POST request to ```/api/token/refresh/```
 ```json
 {
     "refresh": "refresh_token"
+}
+```
+
+Example POST request to ```/api/friend-request/```
+```json
+{
+    "receiver_name": "friend_username"
 }
 ```
 
