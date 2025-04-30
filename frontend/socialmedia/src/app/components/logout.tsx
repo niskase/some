@@ -15,7 +15,7 @@ const logout = async () => {
     
 }
 
-export default function Logged() {
+export default function Logout() {
 
   //const [logged, setLogged] = useState(false);
 
@@ -40,7 +40,7 @@ export default function Logged() {
 
   return (
     <div>
-      <button onClick={handleLogout} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Kirjaudu ulos</button>
+      <button onClick={handleLogout} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Logout</button>
     </div>
   );
 }
