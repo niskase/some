@@ -17,10 +17,12 @@ class FriendSerializer(serializers.ModelSerializer):
 class FriendRequestSerializer(serializers.ModelSerializer):
     sender = serializers.StringRelatedField()
     receiver = serializers.StringRelatedField()
+    sender_id = serializers.StringRelatedField()
+    receiver_id = serializers.StringRelatedField()
 
     class Meta:
         model = FriendRequest
-        fields = ['id', 'sender', 'receiver', 'status']
+        fields = ['id', 'sender_id', 'receiver_id', 'sender', 'receiver', 'status']
 
 # Profile serializer
 class ProfileSerializer(serializers.ModelSerializer):
