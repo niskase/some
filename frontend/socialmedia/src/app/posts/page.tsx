@@ -119,6 +119,9 @@ export default function PostsPage() {
           posts.map((post: Post) => (
             <div key="post">
               <div className="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+                <div className="flex px-3 py-2 border-t dark:border-gray-600 border-gray-200">
+                  <em>By {post.created_by.first_name} {post.created_by.last_name} ~ {post.created_at}</em>
+                </div>
                 <div className="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
                     <label for="comment" className="sr-only">Your comment</label>
                     <p>{post.content}</p>
@@ -137,29 +140,22 @@ export default function PostsPage() {
                     <span className="sr-only">Delete</span>
                   </button>
                 </div>
-            </div>
-              <div key={post.id} className="border p-4 rounded mb-2">
-                <p><strong>{post.created_by.first_name} {post.created_by.last_name}</strong></p>
-                <p>Created: {post.created_at}</p>
-                <p>{post.content}</p>
-                <hr />
-                <button onClick={()=>handlePostLike(post)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                  Like
-                </button>
-                <button onClick={()=>handlePostDelete(post)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-                  Delete
-                </button>
                 {post.likes.length === 0 ? (
-                  <p>No likes yet</p>
-                ) : (
-                  <ul>
-                    {post.likes.map((user: User, index: number) => (
-                      <li key={user.id}>👍 {user.first_name} {user.last_name}</li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+                  <div className="flex px-3 py-2 border-t dark:border-gray-600 border-gray-200">
+                    <p>No likes yet</p>
+                  </div>
+                  ) : (
+                    <div className="flex px-3 py-2 border-t dark:border-gray-600 border-gray-200">
+                      <p>Likes:</p>
+                      <ul>
+                        {post.likes.map((user: User, index: number) => (
+                          <li key={user.id}>👍 {user.first_name} {user.last_name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
             </div>
+          </div>
           ))
         )}
       </div>
