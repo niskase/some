@@ -51,3 +51,31 @@ export async function PostLike(postId: number, onSuccess: () => void) {
     }
 
 }
+
+export async function PostDelete(postId: number, onSuccess: () => void) {
+
+  const token = localStorage.getItem('access');
+
+  try {
+    const response = await fetch(`http://localhost:8000/api/posts/${postId}/`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Failed to delete post', errorData);
+    } else {
+      console.log('Post liked successfully');
+      onSuccess();
+    }
+    
+
+  } catch(error) {
+    console.error("Error while deleting post", error);
+  }
+
+}

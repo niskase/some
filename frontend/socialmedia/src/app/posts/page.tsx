@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import RefreshToken from '../services/auth';
-import NewPost, { PostLike } from '../services/post';
+import NewPost, { PostDelete, PostLike } from '../services/post';
 import { useRouter } from 'next/navigation';
+import Logged from '../components/logged';
 
 class Post {
   id!: number;
@@ -68,6 +69,10 @@ export default function PostsPage() {
     await PostLike(post.id, fetchPosts);
   }
 
+  const handlePostDelete = async (post: Post) => {
+    await PostDelete(post.id, fetchPosts);
+  }
+
   if (loading) return <p>Loading updates...</p>;
 
   /*async function likePost(post: Post) {
@@ -94,6 +99,7 @@ export default function PostsPage() {
 
   return (
     <div>
+      <Logged></Logged>
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-4">Updates</h1>
         <div className="border p-4 rounded mb-2">
@@ -114,6 +120,9 @@ export default function PostsPage() {
               <hr />
               <button onClick={()=>handlePostLike(post)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
                 Like
+              </button>
+              <button onClick={()=>handlePostDelete(post)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                Delete
               </button>
               {post.likes.length === 0 ? (
                 <p>No likes yet</p>
